@@ -1,63 +1,55 @@
-    #include<stdio.h>  
-    #include<conio.h>  
-      
-    void main()  
+#include<stdio.h>
+ 
+int main()
+{
+ 
+  int cnt,j,n,t,remain,flag=0,tq;
+  int wt=0,tat=0,at[10],bt[10],rt[10];
+  printf("Enter Total Process:\t ");
+  scanf("%d",&n);
+  remain=n;
+  for(cnt=0;cnt<n;cnt++)
+  {
+    printf("Enter Arrival Time and Burst Time for Process Process Number %d :",cnt+1);
+    scanf("%d",&at[cnt]);
+    scanf("%d",&bt[cnt]);
+    rt[cnt]=bt[cnt];
+  }
+  printf("Enter Time Quantum:\t");
+  scanf("%d",&tq);
+  printf("\n\nProcess\t|Turnaround Time|Waiting Time\n\n");
+  for(t=0,cnt=0;remain!=0;)
+  {
+    if(rt[cnt]<=tq && rt[cnt]>0)
     {
-        int i, NOP, sum=0,count=0, y, quant, wt=0, tat=0, at[10], bt[10], temp[10];  
-        float avg_wt, avg_tat;  
-        printf(" Total number of process in the system: ");  
-        scanf("%d", &NOP);  
-        y = NOP; 
+      t+=rt[cnt];
+      rt[cnt]=0;
+      flag=1;
+    }
+    else if(rt[cnt]>0)
+    {
+      rt[cnt]-=tq;
+      t+=tq;
+    }
+    if(rt[cnt]==0 && flag==1)
+    {
+      remain--;
+      printf("P[%d]\t|\t%d\t|\t%d\n",cnt+1,t-at[cnt],t-at[cnt]-bt[cnt]);
+      wt+=t-at[cnt]-bt[cnt];
+      tat+=t-at[cnt];
+      flag=0;
+    }
+    if(cnt==n-1)
+      cnt=0;
+    else if(at[cnt+1]<=t)
+      cnt++;
+    else
+      cnt=0;
+  }
+  printf("\nAverage Waiting Time= %f\n",wt*1.0/n);
+  printf("Avg Turnaround Time = %f",tat*1.0/n);
+  
+  return 0;
+}
 
-    for(i=0; i<NOP; i++)  
-    {  
-    printf("\n Enter the Arrival and Burst time of the Process[%d]\n", i+1);  
-    printf(" Arrival time is: \t");    
-    scanf("%d", &at[i]);  
-    printf(" \nBurst time is: \t");   
-    scanf("%d", &bt[i]);  
-    temp[i] = bt[i];  
-    }
-    printf("Enter the Time Quantum for the process: \t");  
-    scanf("%d", &quant);   
-    printf("\n Process No \t\t Burst Time \t\t TAT \t\t Waiting Time ");  
-    for(sum=0, i = 0; y!=0; )  
-    {  
-    if(temp[i] <= quant && temp[i] > 0)    
-    {  
-        sum = sum + temp[i];  
-        temp[i] = 0;  
-        count=1;  
-        }     
-        else if(temp[i] > 0)  
-        {  
-            temp[i] = temp[i] - quant;  
-            sum = sum + quant;    
-        }  
-        if(temp[i]==0 && count==1)  
-        {  
-            y--; 
-            printf("\nProcess No[%d] \t\t %d\t\t\t\t %d\t\t\t %d", i+1, bt[i], sum-at[i], sum-at[i]-bt[i]);  
-            wt = wt+sum-at[i]-bt[i];  
-            tat = tat+sum-at[i];  
-            count =0;     
-        }  
-        if(i==NOP-1)  
-        {  
-            i=0;  
-        }  
-        else if(at[i+1]<=sum)  
-        {  
-            i++;  
-        }  
-        else  
-        {  
-            i=0;  
-        }  
-    }
-    avg_wt = wt * 1.0/NOP;  
-    avg_tat = tat * 1.0/NOP;  
-    printf("\n Average Turn Around Time: \t%f", avg_wt);  
-    printf("\n Average Waiting Time: \t%f", avg_tat);  
-    getch();  
-    }  
+
